@@ -38,6 +38,37 @@ elif command_exists vi && ! command_exists vim; then
     alias vim='vi'
 fi
 
+# VSCode
+function _code() {
+  local -a code_workspaces=(*.code-workspace)
+
+  if [ ${#} -eq 1 ] && [ "${1}" == "." ] && [ ${#code_workspaces[@]} -ne 0 ] && [ "${code_workspaces[0]}" != "*.code-workspace" ]; then
+
+    if [ ${#code_workspaces[@]} -eq 1 ]; then
+      echo "Launching code workspace '${code_workspaces[0]}'"
+      command code "${code_workspaces[0]}"
+    else
+      echo "Select code workspace"
+      local selected_workspace
+      for ((i=0; i != ${#code_workspaces[@]}; i++)); do
+        echo "${i}: ${code_workspace[${i}]}"
+        read -r -n1 selected_workspace
+        if [ "${code_workspace[${selected_workspace}]}" != "" ]; then
+          command code "${code_workspaces[${selected_workspace}]}"
+        else
+          echo "Not found"
+          return 1
+        fi
+      done
+    fi
+  else
+    command code "${@}"
+  fi
+}
+if command_exists code; then
+    alias code='_code'
+fi
+
 # Debug
 alias objdump='objdump -M intel'
 alias gdb='gdb -ex "set disassembly-flavor intel"'

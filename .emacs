@@ -56,8 +56,8 @@
 ;; Enable Docker
 ;; https://domeide.github.io/
 ;; https://github.com/spotify/dockerfile-mode
-(require 'dockerfile-mode)
-(add-to-list 'auto-mode-alist '("Dockerfile" . dockerfile-mode))
+;(require 'dockerfile-mode)
+;(add-to-list 'auto-mode-alist '("Dockerfile" . dockerfile-mode))
 
 ;; Enable upper/lower case functionalities
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Case.html

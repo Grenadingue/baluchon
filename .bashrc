@@ -16,6 +16,10 @@ shopt -s histappend
 HISTSIZE=-1
 HISTFILESIZE=100000000
 
+# save history immediatly
+# write history in file, clears session's history, then reload history file's content
+PROMPT_COMMAND="history -a; history -c; history -r; ${PROMPT_COMMAND}"
+
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize

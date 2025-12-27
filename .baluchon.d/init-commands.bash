@@ -55,7 +55,7 @@ fi
 
 # Pacman AUR wrapper
 if command_exists yay; then
-  alias yay='yay --answerdiff All'
+  alias yay='yay --answerdiff All --sudoloop'
 fi
 
 # Export default editor

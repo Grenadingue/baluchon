@@ -1,63 +1,60 @@
-declare -A colors=(
-    ["blue"]="\033[34m"
-    ["yellow"]="\033[33m"
-    ["red"]="\033[31m"
-    ["green"]="\033[32m"
-    ["white"]="\033[97m"
-    ["magenta"]="\033[35m"
-    ["light-gray"]="\033[37m"
-    ["dark-gray"]="\033[1;30m"
-)
+#!/usr/bin/env bash
+#
+# Terminal color configuration
+#
 
-declare -A style=(
-    ["bold"]="\e[1m"
-    ["underline"]="\033[4m"
-    ["blink"]="\033[5m"
-    ["reverse"]="\033[7m"
-    ["reset"]="\033[0m"
-)
+# Detect terminal color support
+color_support=
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-  xterm-*color) color_support=yes;;
-esac
-
-if [ -n "$force_color" ]; then
-  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-    # We have color support; assume it's compliant with Ecma-48
-    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-    # a case would tend to support setf rather than setaf.)
-    color_support=yes
-  else
-    color_support=
-  fi
+if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
+    if tput setaf 1 >/dev/null 2>&1; then
+        color_support=yes
+    fi
 fi
 
-colored_man()
-{
-  env LESS_TERMCAP_mb=$(printf "\e[34m") \
-    LESS_TERMCAP_md=$(printf "\e[1;31m") \
-    LESS_TERMCAP_me=$(printf "\e[0m") \
-    LESS_TERMCAP_se=$(printf "\e[0m") \
-    LESS_TERMCAP_so=$(printf "\e[30;43m") \
-    LESS_TERMCAP_ue=$(printf "\e[0m") \
-    LESS_TERMCAP_us=$(printf "\e[1;4;37m") \
-    man "$@"
-}
+# Allow forcing color support
+if [[ -n "$force_color" ]]; then
+    color_support=yes
+fi
 
-if [ "$color_support" == yes ]; then
-  # enable color support of ls and also add handy aliases
-  alias man='colored_man'
-  if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+# Initialize color definitions
+declare -A colors=()
+declare -A style=()
 
-    if [ "$OS" == "Mac OS X" ]; then
-      alias ls='ls -G'
-    else
-      alias ls='ls --color=auto'
-    fi
+if [[ "$color_support" == yes ]]; then
+
+    # Semantic colors, mapped to the terminal ANSI palette
+    colors=(
+        ["blue"]="$(tput setaf 4)"
+        ["yellow"]="$(tput setaf 3)"
+        ["red"]="$(tput setaf 1)"
+        ["green"]="$(tput setaf 2)"
+        ["white"]="$(tput setaf 15)"
+        ["magenta"]="$(tput setaf 5)"
+        ["light-gray"]="$(tput setaf 7)"
+        ["dark-gray"]="$(tput setaf 8)"
+    )
+
+    # Text styles
+    style=(
+        ["bold"]="$(tput bold)"
+        ["underline"]="$(tput smul)"
+        ["blink"]="$(tput blink)"
+        ["reverse"]="$(tput rev)"
+        ["reset"]="$(tput sgr0)"
+    )
+
+    # Enable command colors
+    alias ls='ls --color=auto'
     alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-  fi
+
+    function colored_man() {
+    env -u MAN_KEEP_FORMATTING \
+        GROFF_NO_SGR=1 \
+        MANPAGER='less -R' \
+        LESS_TERMCAP_md=$'\e[1;31m' \
+        LESS_TERMCAP_me=$'\e[0m' \
+        man "$@"
+    }
+    alias man='colored_man'
 fi

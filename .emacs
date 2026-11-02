@@ -25,12 +25,9 @@
 (add-to-list 'load-path "~/.emacs.d/ocaml")
 (add-to-list 'load-path "~/.emacs.d/sym-lock")
 (add-to-list 'load-path "~/.emacs.d/whitespace")
-(add-to-list 'load-path "~/.emacs.d/qml")
 (add-to-list 'load-path "~/.emacs.d/php")
 (add-to-list 'load-path "~/.emacs.d/debug")
-(add-to-list 'load-path "~/.emacs.d/arduino-mode")
 (add-to-list 'load-path "~/.emacs.d/dockerfile-mode")
-;; (load-file "~/.emacs.d/arduino-mode/arduino-mode.el")
 
 (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
 (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
@@ -50,14 +47,11 @@
 ;; Select + up
 (define-key input-decode-map "\e[1;2A" [S-up])
 
-;; Enable QML
-(require 'qml-mode)
-
 ;; Enable Docker
 ;; https://domeide.github.io/
 ;; https://github.com/spotify/dockerfile-mode
-;(require 'dockerfile-mode)
-;(add-to-list 'auto-mode-alist '("Dockerfile" . dockerfile-mode))
+(require 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile" . dockerfile-mode))
 
 ;; Enable upper/lower case functionalities
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Case.html

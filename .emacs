@@ -1,4 +1,4 @@
-;; .myemacs
+;; .myemacs  -*- lexical-binding: nil; -*-
 
 ;; configure colors for a terminal with dark background
 (setq frame-background-mode 'dark)

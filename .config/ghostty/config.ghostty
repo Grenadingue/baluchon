@@ -55,4 +55,4 @@
 scrollback-limit = unlimited
 
 # Automatic system theme
-theme = light:Adwaita,dark:Adwaita Dark
+theme = light:Adwaita,dark:Obsurdian

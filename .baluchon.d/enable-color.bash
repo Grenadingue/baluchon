@@ -21,6 +21,15 @@ fi
 declare -A colors=()
 declare -A style=()
 
+function colored_man() {
+    env -u MAN_KEEP_FORMATTING \
+        GROFF_NO_SGR=1 \
+        MANPAGER='less -R' \
+        LESS_TERMCAP_md=$'\e[1;31m' \
+        LESS_TERMCAP_me=$'\e[0m' \
+        man "$@"
+}
+
 if [[ "$color_support" == yes ]]; then
 
     # Semantic colors, mapped to the terminal ANSI palette
@@ -47,14 +56,5 @@ if [[ "$color_support" == yes ]]; then
     # Enable command colors
     alias ls='ls --color=auto'
     alias grep='grep --color=auto'
-
-    function colored_man() {
-    env -u MAN_KEEP_FORMATTING \
-        GROFF_NO_SGR=1 \
-        MANPAGER='less -R' \
-        LESS_TERMCAP_md=$'\e[1;31m' \
-        LESS_TERMCAP_me=$'\e[0m' \
-        man "$@"
-    }
     alias man='colored_man'
 fi
